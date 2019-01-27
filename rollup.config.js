@@ -1,25 +1,33 @@
-import typescript from 'rollup-plugin-typescript2'
-import pkg from './package.json'
+import rollupTypescript from "rollup-plugin-typescript2"
+import del from "rollup-plugin-delete"
+import typescript from "typescript"
+import babel from "rollup-plugin-babel"
+
+import p from "./package.json"
 
 export default {
-  input: 'src/index.ts',
+  input: "src/index.ts",
   output: [
     {
-      file: pkg.main,
-      format: 'cjs',
+      file: p.main,
+      format: "cjs",
     },
     {
-      file: pkg.module,
-      format: 'es',
+      file: p.module,
+      format: "es",
     },
   ],
-  external: [
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-  ],
-plugins: [
-    typescript({
-      typescript: require('typescript'),
+  external: [...Object.keys(p.dependencies || {}), ...Object.keys(p.peerDependencies || {})],
+  plugins: [
+    del({
+      targets: "dist",
+    }),
+    rollupTypescript({
+      typescript,
+    }),
+    babel({
+      exclude: "node_modules/**",
+      extensions: [".js", ".ts"],
     }),
   ],
 }
