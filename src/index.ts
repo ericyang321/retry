@@ -2,13 +2,12 @@ export type Callee = () => any
 export type VoidFunc = () => void
 
 export interface Settings {
-  exponentialBackoff: boolean
-  timeout: number
-  tries: number
-  every: number
+  timeoutAfter: number
+  totalTries: number
+  tickEvery: number
 }
 
-export interface PublicController {
+export interface Controller {
   abort: VoidFunc
   pause: VoidFunc
   resume: VoidFunc
@@ -27,7 +26,7 @@ class Trier {
     this.settings = settings
 
     this.__timerID = null
-    this.__currentTryCount = this.settings.tries
+    this.__currentTryCount = this.settings.totalTries
   }
 
   private decrementTryCount(): void {
@@ -55,7 +54,7 @@ class Trier {
 
   public pause(): void {
     if (this.__timerID == null) {
-      // timer has already stopped. Handle error here.
+      console.error("Warning: trytrytry timer is already paused.")
       return
     }
     clearTimeout(this.__timerID)
@@ -63,7 +62,7 @@ class Trier {
 
   public resume(): void {
     if (this.__timerID != null) {
-      // timer is already ongoing. Handle error here.
+      console.error("Warning: trytrytry timer is already executing.")
       return
     }
     this.execute()
@@ -83,22 +82,21 @@ class Trier {
 
 function trytrytry(settings: Settings, fn: Callee) {
   const defaultSettings: Settings = {
-    exponentialBackoff: false,
-    timeout: 10 * 1000,
-    tries: 5,
-    every: 200,
+    timeoutAfter: 10 * 1000,
+    totalTries: 5,
+    tickEvery: 200,
   }
   const userSettings: Settings = Object.assign({}, defaultSettings, settings)
   const trier: Trier = new Trier(userSettings, fn)
   trier.execute()
-  const publicController: PublicController = {
+  const controller: Controller = {
     abort: trier.abort,
     pause: trier.pause,
     resume: trier.resume,
     isPaused: trier.paused,
     isOngoing: trier.canStillTry,
   }
-  return publicController
+  return controller
 }
 
 export default trytrytry
