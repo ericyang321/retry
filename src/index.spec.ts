@@ -17,7 +17,7 @@ describe("callback", () => {
     jest.clearAllTimers()
   })
 
-  it("calls passed callback function", () => {
+  test("calls passed callback function", () => {
     // When
     trytrytry(settings, mockFn)
     jest.runAllTimers()
@@ -25,7 +25,7 @@ describe("callback", () => {
     expect(mockFn).toHaveBeenCalled()
   })
 
-  it("calls passed callback function the correct number of times", () => {
+  test("calls passed callback function the correct number of times", () => {
     // When
     trytrytry(settings, mockFn)
     jest.runAllTimers()
@@ -41,6 +41,38 @@ describe("pausing functionality", () => {
     totalTries: 5,
     tickEvery: 200,
   }
+
+  beforeEach(() => {
+    jest.useFakeTimers()
+    mockFn = jest.fn()
+  })
+
+  test("stops callback execution", () => {
+    // Given
+    const controller = trytrytry(settings, mockFn)
+    controller.pause()
+    // When
+    jest.advanceTimersByTime(settings.tickEvery * 3)
+    // Then
+    expect(mockFn).toHaveBeenCalledTimes(0)
+  })
+
+  test("when paused, return status of true for isPaused", () => {
+    // Given
+    const controller = trytrytry(settings, mockFn)
+    controller.pause()
+    // Then
+    expect(controller.isPaused()).toEqual(true)
+  })
+
+  test("when not paused, return status of false for isPaused", () => {
+    // Given
+    const controller = trytrytry(settings, mockFn)
+    // When
+    jest.runAllTimers()
+    // Then
+    expect(controller.isPaused()).toEqual(false)
+  })
 })
 
 describe("publicly returned controller", () => {
@@ -57,23 +89,23 @@ describe("publicly returned controller", () => {
     controller = trytrytry(settings, mockFn)
   })
 
-  it("has abort function", () => {
+  test("has abort function", () => {
     expect(controller.abort).toEqual(expect.any(Function))
   })
 
-  it("has pause function", () => {
+  test("has pause function", () => {
     expect(controller.pause).toEqual(expect.any(Function))
   })
 
-  it("has resume function", () => {
+  test("has resume function", () => {
     expect(controller.resume).toEqual(expect.any(Function))
   })
 
-  it("has isPaused status indicator function", () => {
+  test("has isPaused status indicator function", () => {
     expect(controller.isPaused).toEqual(expect.any(Function))
   })
 
-  it("has isOngoing status indicator function", () => {
+  test("has isOngoing status indicator function", () => {
     expect(controller.isOngoing).toEqual(expect.any(Function))
   })
 })

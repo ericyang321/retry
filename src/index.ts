@@ -27,6 +27,12 @@ class Trier {
 
     this.__timerID = null
     this.__currentTryCount = this.settings.totalTries
+
+    this.execute = this.execute.bind(this)
+    this.pause = this.pause.bind(this)
+    this.paused = this.paused.bind(this)
+    this.resume = this.resume.bind(this)
+    this.canStillTry = this.canStillTry.bind(this)
   }
 
   private decrementTryCount(): void {
@@ -58,6 +64,7 @@ class Trier {
       return
     }
     clearTimeout(this.__timerID)
+    this.__timerID = null
   }
 
   public resume(): void {
@@ -76,11 +83,11 @@ class Trier {
       this.fn()
       this.decrementTryCount()
       this.execute()
-    }, this.__currentTryCount)
+    }, this.settings.tickEvery)
   }
 }
 
-function trytrytry(settings: Settings, fn: Callee) {
+function trytrytry(settings: Settings, fn: Callee): Controller {
   const defaultSettings: Settings = {
     timeoutAfter: 10 * 1000,
     totalTries: 5,
