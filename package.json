@@ -21,6 +21,7 @@
       "ts",
       "js"
     ],
+    "clearMocks": true,
     "testRegex": "^.+\\.spec\\.ts$"
   },
   "repository": {
