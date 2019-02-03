@@ -14,11 +14,23 @@ describe("callback", () => {
     mockFn = jest.fn()
   })
 
-  it("calls the callback passed in", () => {
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
+  it("calls passed callback function", () => {
     // When
     trytrytry(settings, mockFn)
     jest.runAllTimers()
     // Then
-    expect(mockFn).toHaveBeenCalledTimes(5)
+    expect(mockFn).toHaveBeenCalled()
+  })
+
+  it("calls passed callback function the correct number of times", () => {
+    // When
+    trytrytry(settings, mockFn)
+    jest.runAllTimers()
+    // Then
+    expect(mockFn).toHaveBeenCalledTimes(settings.tries)
   })
 })

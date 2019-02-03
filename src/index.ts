@@ -70,13 +70,13 @@ class Trier {
   }
 
   public execute(): void {
-    console.log("execution son")
     this.__timerID = setTimeout(() => {
       if (this.canStillTry() === false) {
         return
       }
-      this.execute()
+      this.fn()
       this.decrementTryCount()
+      this.execute()
     }, this.__currentTryCount)
   }
 }
