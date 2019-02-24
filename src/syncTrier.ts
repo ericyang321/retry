@@ -3,36 +3,65 @@ import { Settings } from "./settings";
 export type Callee = () => any;
 
 /*
-  no more deving on this class until you've tested the shit out of this:
+  pausing mechanism
 */
 
 export default class SyncTrier {
   public callee: Callee;
   private __waitFor: number;
-  private __intervalID: NodeJS.Timer;
+  private __intervalID: NodeJS.Timer | null;
   private __callCount: number;
 
   constructor(settings: Settings, callee: Callee) {
     this.callee = callee;
     this.__waitFor = settings.waitFor;
     this.__callCount = settings.callCount;
+    this.__intervalID = null;
 
     this.tick = this.tick.bind(this);
     this.decrementCallCount = this.decrementCallCount.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
+    this.pause = this.pause.bind(this);
+    this.resume = this.resume.bind(this);
 
     this.__intervalID = setInterval(this.tick, this.__waitFor);
   }
 
-  private tick() {
-    if (this.__callCount === 0) {
-      clearInterval(this.__intervalID);
+  private tick(): void {
+    if (this.__callCount <= 0) {
+      this.stopTimer();
       return;
     }
     this.callee();
     this.decrementCallCount();
   }
 
-  private decrementCallCount() {
-    this.__callCount--;
+  private stopTimer(): void {
+    if (!this.__intervalID) return;
+    clearInterval(this.__intervalID);
+    this.__intervalID = null;
+  }
+
+  private decrementCallCount(): void {
+    if (this.__callCount > 0) {
+      this.__callCount--;
+    }
+  }
+
+  public pause(): void {
+    if (!this.__intervalID) {
+      // there isn't currently a setInterval going
+      return;
+    }
+    clearInterval(this.__intervalID);
+    this.__intervalID = null;
+  }
+
+  public resume(): void {
+    if (this.__intervalID) {
+      // theres already a setInterval going
+      return;
+    }
+    this.__intervalID = setInterval(this.tick, this.__waitFor);
   }
 }
