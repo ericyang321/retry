@@ -1,25 +1,21 @@
-export type Callee = Function | Promise<any>;
+import { isPromise, isFunc } from "./identifiers";
+import SyncTrier, { Callee } from "./syncTrier";
+import AsyncTrier from "./asyncTrier";
 
-/*
-  step 1: make it work with Promise
-*/
-
-class Trier {
-  constructor() {}
+function getTrier(callee: Callee) {
+  if (isPromise(callee)) {
+    return AsyncTrier;
+  } else if (isFunc(callee)) {
+    return SyncTrier;
+  } else {
+    throw new Error(
+      `trytrytry error: cannot accept ${typeof callee} as a repeatable callee.
+       trytrytry accepts a Promise or a Function`
+    );
+  }
 }
 
-function trytrytry() {
+export default function trytrytry(callee: Callee) {
   const defaultSettings = {};
+  const trier = getTrier(callee);
 }
-
-/*
-  trytrytry(settings, new Promise((resolve, reject) => {
-
-  }))
-
-  trytrytry(settings, () => {
-
-  })
-*/
-
-export default trytrytry;
