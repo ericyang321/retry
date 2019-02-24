@@ -48,6 +48,10 @@ export default class SyncTrier {
     }
   }
 
+  public isPaused(): boolean {
+    return this.__intervalID == null && this.__callCount > 0;
+  }
+
   public pause(): void {
     if (!this.__intervalID) {
       // there isn't currently a setInterval going

@@ -6,11 +6,11 @@ describe("isPromise", () => {
   });
 
   it("returns true for a resolved promise", () => {
-    expect(isPromise(Promise.resolve())).toBe(true);
+    expect(isPromise(Promise.resolve(""))).toBe(true);
   });
 
   it("returns true for a rejected promise", () => {
-    expect(isPromise(Promise.reject())).toBe(true);
+    expect(isPromise(Promise.reject("").catch(() => {}))).toBe(true);
   });
 
   const nonPromiseTypes = ["str", true, 4, function() {}, () => {}, {}, []];
@@ -31,7 +31,14 @@ describe("isFunc", () => {
     expect(isFunc(() => {})).toBe(true);
   });
 
-  const nonFunctionTypes = ["str", true, 4, new Promise(() => {}), Promise.resolve(), Promise.reject()];
+  const nonFunctionTypes = [
+    "str",
+    true,
+    4,
+    new Promise(() => {}),
+    Promise.resolve(""),
+    Promise.reject("").catch(() => {}),
+  ];
 
   nonFunctionTypes.forEach(type => {
     it(`returns false for ${type.toString()}`, () => {
