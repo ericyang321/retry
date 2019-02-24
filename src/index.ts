@@ -7,12 +7,11 @@ function getTrier(callee: Callee) {
     return AsyncTrier;
   } else if (isFunc(callee)) {
     return SyncTrier;
-  } else {
-    throw new Error(
-      `trytrytry error: cannot accept ${typeof callee} as a repeatable callee.
-       trytrytry accepts a Promise or a Function`
-    );
   }
+  throw new Error(
+    `trytrytry error: cannot accept ${typeof callee} as a repeatable callee.
+     trytrytry accepts a Promise or a Function`
+  );
 }
 
 export default function trytrytry(callee: Callee) {
