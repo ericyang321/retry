@@ -1,11 +1,11 @@
 {
-  "name": "retry",
+  "name": "trytrytry",
   "version": "0.0.1",
-  "description": "Customizable operation retrier",
+  "description": "Keep trying until you succeed",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "files": [
-    "dist"
+    "dist/**/*"
   ],
   "types": "dist/index.d.ts",
   "scripts": {
