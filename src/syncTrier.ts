@@ -1,10 +1,6 @@
 import { Settings } from "./settings";
 
-export type Callee = () => true | any;
-
-/*
-
-*/
+export type Callee = () => any;
 
 export default class SyncTrier {
   public callee: Callee;
@@ -53,7 +49,6 @@ export default class SyncTrier {
 
   public pause = (): void => {
     if (!this.__intervalID) {
-      // there isn't currently a setInterval going
       return;
     }
     clearInterval(this.__intervalID);
@@ -62,7 +57,6 @@ export default class SyncTrier {
 
   public resume = (): void => {
     if (this.__intervalID) {
-      // theres already a setInterval going
       return;
     }
     this.__intervalID = setInterval(this.tick, this.__waitFor);
