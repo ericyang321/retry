@@ -54,5 +54,8 @@ typings/
 # Rollup cache
 .rpt2_cache/
 
-# distribution
+# distribution files
+*.d.ts
+index.es.js
+index.js
 dist/

@@ -4,13 +4,13 @@
   "description": "Keep trying until you succeed",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "files": [
     "/dist"
   ],
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "prepare": "npm run build",
+    "prepare": "npm run --silent build -- --silent",
     "watch": "rollup -cw",
     "test": "jest"
   },

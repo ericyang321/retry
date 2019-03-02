@@ -1,9 +1,9 @@
-import rollupTypescript from "rollup-plugin-typescript2"
-import del from "rollup-plugin-delete"
-import typescript from "typescript"
-import babel from "rollup-plugin-babel"
+import rollupTypescript from "rollup-plugin-typescript2";
+import del from "rollup-plugin-delete";
+import typescript from "typescript";
+import babel from "rollup-plugin-babel";
 
-import p from "./package.json"
+import p from "./package.json";
 
 export default {
   input: "src/index.ts",
@@ -30,4 +30,4 @@ export default {
       extensions: [".js", ".ts"],
     }),
   ],
-}
+};

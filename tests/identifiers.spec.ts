@@ -1,4 +1,4 @@
-import { isPromise, isFunc } from "./identifiers";
+import { isPromise, isFunc } from "../src/identifiers";
 
 describe("isPromise", () => {
   it("returns true for a promise", () => {

@@ -1,4 +1,4 @@
-import SyncTrier, { Callee } from "./syncTrier";
+import SyncTrier, { Callee } from "trytrytry";
 
 const defaultSettings = {
   waitFor: 200,
