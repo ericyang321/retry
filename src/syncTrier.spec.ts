@@ -1,14 +1,21 @@
-import SyncTrier, { Callee } from "trytrytry";
+import trytrytry from "./index";
 
 const defaultSettings = {
   waitFor: 200,
   maxTries: 3,
 };
 
+interface SyncTrier {
+  pause(): void;
+  resume(): void;
+  isPaused(): boolean;
+}
+
 describe("SyncTrier", () => {
+  let trier: SyncTrier;
+
   describe("repeated calling mechanism", () => {
-    let trier: SyncTrier;
-    let mockFn: Callee;
+    let mockFn: Function;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -16,7 +23,7 @@ describe("SyncTrier", () => {
 
     beforeEach(() => {
       mockFn = jest.fn();
-      trier = new SyncTrier(defaultSettings, mockFn);
+      trier = trytrytry(defaultSettings, mockFn);
     });
 
     it("calls callee by call count times", () => {
@@ -42,8 +49,7 @@ describe("SyncTrier", () => {
   });
 
   describe("on successful try detected", () => {
-    let trier: SyncTrier;
-    let mockFn: Callee;
+    let mockFn: Function;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -51,7 +57,7 @@ describe("SyncTrier", () => {
 
     beforeEach(() => {
       mockFn = jest.fn(() => true);
-      trier = new SyncTrier(defaultSettings, mockFn);
+      trier = trytrytry(defaultSettings, mockFn);
     });
 
     it("stops execution when passed callee returns true", () => {
@@ -63,8 +69,7 @@ describe("SyncTrier", () => {
   });
 
   describe("pausing", () => {
-    let trier: SyncTrier;
-    let mockFn: Callee;
+    let mockFn: Function;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -72,7 +77,7 @@ describe("SyncTrier", () => {
 
     beforeEach(() => {
       mockFn = jest.fn();
-      trier = new SyncTrier(defaultSettings, mockFn);
+      trier = trytrytry(defaultSettings, mockFn);
     });
 
     it("#pause stops callee executions", () => {

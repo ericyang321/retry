@@ -6,14 +6,22 @@ export default class AsyncTrier {
   private __promise: AnyPromise;
   private __waitFor: number;
 
-  constructor(promise: AnyPromise, settings: Settings) {
+  constructor(settings: Settings, promise: AnyPromise) {
     this.__promise = promise;
     this.__waitFor = settings.waitFor;
   }
 
-  wait(): Promise<void> {
+  private wait(): Promise<void> {
     return new Promise(resolve => {
       setTimeout(resolve, this.__waitFor);
     });
   }
+
+  public isPaused = (): boolean => {
+    return true;
+  };
+
+  public pause = (): void => {};
+
+  public resume = (): void => {};
 }
