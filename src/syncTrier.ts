@@ -1,4 +1,5 @@
-import { Settings } from "./settings";
+import { Settings, PayloadFunc } from "./settings";
+import { isHash, isFunc } from "./identifiers";
 
 export type Callee = () => any;
 
@@ -7,11 +8,13 @@ export default class SyncTrier {
   private __waitFor: number;
   private __intervalID: NodeJS.Timer | null;
   private __callCount: number;
+  private __onSuccess?: PayloadFunc;
 
   constructor(settings: Settings, callee: Callee) {
     this.callee = callee;
     this.__waitFor = settings.waitFor;
     this.__callCount = settings.maxTries;
+    this.__onSuccess = settings.success;
 
     this.__intervalID = setInterval(this.tick, this.__waitFor);
   }
@@ -22,8 +25,15 @@ export default class SyncTrier {
       return;
     }
     const result = this.callee();
-    if (result === true) {
+    if (isHash(result) && result.success === true) {
       this.stopTimer();
+      if (typeof this.__onSuccess === "function") {
+        if (result.payload) {
+          this.__onSuccess(result.payload);
+        } else {
+          this.__onSuccess();
+        }
+      }
       return;
     }
     this.decrementCallCount();

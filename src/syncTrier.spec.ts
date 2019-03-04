@@ -1,21 +1,10 @@
-import trytrytry from "./index";
-
-const defaultSettings = {
-  waitFor: 200,
-  maxTries: 3,
-};
-
-interface SyncTrier {
-  pause(): void;
-  resume(): void;
-  isPaused(): boolean;
-}
+import trytrytry, { Trier } from "./index";
+import { Settings, defaultSettings } from "./settings";
 
 describe("SyncTrier", () => {
-  let trier: SyncTrier;
-
   describe("repeated calling mechanism", () => {
-    let mockFn: Function;
+    let mockFn: () => any;
+    let trier: Trier;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -49,27 +38,40 @@ describe("SyncTrier", () => {
   });
 
   describe("on successful try detected", () => {
-    let mockFn: Function;
+    let mockFn: () => any;
+    let successFn: () => any;
+    let trier: Trier;
+    let settings: Settings;
 
     beforeAll(() => {
       jest.useFakeTimers();
     });
 
     beforeEach(() => {
-      mockFn = jest.fn(() => true);
-      trier = trytrytry(defaultSettings, mockFn);
+      mockFn = jest.fn(() => ({ success: true }));
+      successFn = jest.fn();
+      settings = Object.assign({}, defaultSettings, { success: successFn });
+      trier = trytrytry(settings, mockFn);
     });
 
     it("stops execution when passed callee returns true", () => {
       // When
-      jest.advanceTimersByTime(defaultSettings.waitFor);
+      jest.advanceTimersByTime(settings.waitFor);
       // Then
       expect(mockFn).toBeCalledTimes(1);
+    });
+
+    it("calls settings.success callback when try succeeds", () => {
+      // When
+      jest.advanceTimersByTime(settings.waitFor);
+      // Then
+      expect(successFn).toBeCalledTimes(1);
     });
   });
 
   describe("pausing", () => {
-    let mockFn: Function;
+    let mockFn: () => any;
+    let trier: Trier;
 
     beforeAll(() => {
       jest.useFakeTimers();
