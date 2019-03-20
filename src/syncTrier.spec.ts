@@ -3,7 +3,7 @@ import { Settings, defaultSettings } from "./settings";
 
 describe("SyncTrier", () => {
   describe("repeated calling mechanism", () => {
-    let mockFn: () => any;
+    let mockFn: jest.Mock<{}>;
     let trier: Trier;
 
     beforeAll(() => {
@@ -38,7 +38,7 @@ describe("SyncTrier", () => {
   });
 
   describe("on successful try detected", () => {
-    let mockFn: () => any;
+    let mockFn: jest.Mock<{}>;
     let successFn: () => any;
     let trier: Trier;
     let settings: Settings;
@@ -70,7 +70,7 @@ describe("SyncTrier", () => {
   });
 
   describe("pausing", () => {
-    let mockFn: () => any;
+    let mockFn: jest.Mock<{}>;
     let trier: Trier;
 
     beforeAll(() => {

@@ -1,4 +1,5 @@
 import { Settings } from "./settings";
+import { isPromise } from "./identifiers";
 
 export type AnyPromise = Promise<any>;
 export type PromiseCallee = () => AnyPromise;
@@ -24,15 +25,18 @@ export default class AsyncTrier {
       this.__timeoutID = null;
       return;
     }
-    this.callee()
-      .then(this.returnAndStop)
-      .catch(() => {
-        this.__timeoutID = setTimeout(this.executePromise, this.__waitFor);
-        this.decrementCallCount();
-      });
+    const callee = this.callee();
+    if (!isPromise(callee)) {
+      throw new Error("trytrytry: settings[async] is true while passed function does not return a promise.");
+    }
+    callee.then(this.returnAndStop).catch(() => {
+      this.__timeoutID = setTimeout(this.executePromise, this.__waitFor);
+      this.decrementCallCount();
+    });
   };
 
   private returnAndStop = (payload: any): void => {
+    this.__callCount = 0;
     if (typeof this.__onSuccess === "function") {
       this.__onSuccess(payload);
     }
@@ -44,12 +48,3 @@ export default class AsyncTrier {
     }
   };
 }
-
-/*
-  given a promise
-  call promise
-  wait for promise to come back.
-    If its a .then, return the .then value.
-    If its a .catch, wait for __waitFor, and call promise again
-
-*/
